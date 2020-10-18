@@ -7,7 +7,7 @@
     <item>
         <bitmap
             android:gravity="center"
-            android:src="@drawable/bmi_splash"
+            android:src="@drawable/asset4"
             />
     </item>
 </layer-list>
