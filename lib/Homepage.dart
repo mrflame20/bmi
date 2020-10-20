@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:bmi/result.dart';
+import 'package:BMI/result.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:math';
 import 'package:awesome_dialog/awesome_dialog.dart';
@@ -200,7 +200,7 @@ class _HomePageState extends State<HomePage> {
                                     size: 28,
                                   ),
                                   onPressed: () {
-                                    launch('https://github.com/mrflame20');
+                                    launch('https://www.linkedin.com/in/ojas-wani-83108a153/');
                                   }),
                             ),
                           ],
