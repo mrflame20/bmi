@@ -2,6 +2,10 @@
 
 A new Flutter application.
 
+## Demo
+
+<img src="bmi_app.gif">
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.
