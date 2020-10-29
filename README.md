@@ -2,9 +2,13 @@
 
 A BMI Calculator application.
 
+## Tools and Technologies
+* Flutter - Dart
+* Android Studio
+
 ## Demo
 
-<img src="bmi_app.gif">
+<img src="bmi_app.gif" height=500 width=250>
 
 ## Getting Started
 
