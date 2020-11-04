@@ -1,11 +1,14 @@
-import 'package:BMI/Controller/bmi_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
-import 'package:get/get.dart';
+import 'Homepage.dart';
 
-class result extends StatelessWidget {
-  
+class result extends StatefulWidget {
+  @override
+  _resultState createState() => _resultState();
+}
+
+class _resultState extends State<result> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -89,13 +92,13 @@ class result extends StatelessWidget {
 }
 
 String bmiValue() {
-  return Get.find<BmiController>().bmiC.value.bmi.toStringAsFixed(1);
+  return bmi.toStringAsFixed(1);
 }
 
 String getResult() {
-  if (Get.find<BmiController>().bmiC.value.bmi >= 25) {
+  if (bmi >= 25) {
     return 'OVERWEIGHT';
-  } else if (Get.find<BmiController>().bmiC.value.bmi> 18.5) {
+  } else if (bmi > 18.5) {
     return 'NORMAL';
   } else {
     return 'UNDERWEIGHT';
@@ -103,9 +106,9 @@ String getResult() {
 }
 
 String getInterpretation() {
-  if (Get.find<BmiController>().bmiC.value.bmi >= 25) {
+  if (bmi >= 25) {
     return 'You have a higher than normal body weight. Try to exercise more.';
-  } else if (Get.find<BmiController>().bmiC.value.bmi >= 18.5) {
+  } else if (bmi >= 18.5) {
     return 'You have a normal body weight. Good job!';
   } else {
     return 'You have a lower than normal body weight. You can eat a bit more.';
