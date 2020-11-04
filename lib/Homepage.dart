@@ -1,550 +1,351 @@
 import 'dart:async';
+import 'package:BMI/Controller/bmi_controller.dart';
+import 'package:BMI/drawer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:BMI/result.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'dart:math';
-import 'package:awesome_dialog/awesome_dialog.dart';
 
-enum Gender { Male, Female }
-Gender gender;
-double bmi = 0;
 
-class HomePage extends StatefulWidget {
-  @override
-  _HomePageState createState() => _HomePageState();
-}
+import 'package:get/get.dart';
 
-class _HomePageState extends State<HomePage> {
+
+
+
+class HomePage extends StatelessWidget{
+
   Color card_color = Colors.blueGrey[800];
-  int height = 180;
-  int weight = 70;
-  int age = 20;
   Timer timer;
+
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.blueGrey[800],
-          centerTitle: true,
-          title: Text(
-            'BMI CALCULATOR',
-            style: TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
-          ),
-        ),
-        drawer: Drawer(
-          elevation: 10,
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: <Widget>[
-              DrawerHeader(
-                padding: EdgeInsets.all(5),
-                child: Image(
-                  image: AssetImage('assets/bmi.png'),
-                ),
+    return  SafeArea(
+          child: Scaffold(
+            appBar: AppBar(
+              backgroundColor: Colors.blueGrey[800],
+              centerTitle: true,
+              title: Text(
+                'BMI CALCULATOR',
+                style: TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
               ),
-              ListTile(
-                  leading: Icon(Icons.info),
-                  title: Text(
-                    'BMI',
-                    style: TextStyle(fontSize: 20),
-                  ),
-                  subtitle: Text('What is BMI?'),
-                  onTap: () {
-                    AwesomeDialog(
-                      customHeader: Text(
-                        'BMI',
-                        style: TextStyle(
-                            fontSize: 30,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.yellow),
-                      ),
-                      padding: EdgeInsets.all(5),
-                      context: context,
-                      animType: AnimType.LEFTSLIDE,
-                      dialogType: DialogType.NO_HEADER,
-                      body: Container(
-                        child: Text(
-                          '''- The body mass index (BMI) is a measure that uses your height and weight to work out if your weight is healthy.
-
-- The BMI calculation divides an adult's weight in kilograms by their height in metres squared. For example, A BMI of 25 means 25kg/m2.''',
-                          style: TextStyle(
-                              fontStyle: FontStyle.italic, fontSize: 20),
-                        ),
-                      ),
-                      btnOkOnPress: () {},
-                    )..show();
-                  }),
-              ListTile(
-                leading: Icon(Icons.insert_chart),
-                title: Text(
-                  'Chart',
-                  style: TextStyle(fontSize: 20),
-                ),
-                subtitle: Text('Height -> Weight'),
-                onTap: () {
-                  AwesomeDialog(
-                    context: context,
-                    customHeader: Icon(
-                      Icons.insert_chart,
-                      size: 50,
-                      color: Colors.pinkAccent,
-                    ),
-                    animType: AnimType.LEFTSLIDE,
-                    dialogType: DialogType.NO_HEADER,
-                    body: Image(
-                      image: AssetImage('assets/bmi_chart.png'),
-                    ),
-                    btnOkOnPress: () {},
-                  )..show();
-                },
-              ),
-              ListTile(
-                leading: Icon(Icons.perm_identity),
-                title: Text(
-                  'About Developer',
-                  style: TextStyle(fontSize: 20),
-                ),
-                onTap: () {
-                  AwesomeDialog(
-                    context: context,
-                    customHeader: CircleAvatar(
-                      backgroundImage:
-                          AssetImage('assets/junoon Award(face).jpg'),
-                      radius: 50,
-                    ),
-                    animType: AnimType.LEFTSLIDE,
-                    dialogType: DialogType.NO_HEADER,
-                    body: Column(
+            ),
+            drawer: MyDrawer(),
+            body: GetX<BmiController>(
+              init: BmiController(),
+                          builder:(controller) =>Column(
+                children: <Widget>[
+                  Expanded(
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Column(
-                              children: [
+                      children: <Widget>[
+                        Expanded(
+                          child: Card_bmi(
+                            onPressed: () {
+                              controller.bmiC.value.gender = Gender.Male;
+                            },
+                            card_color: controller.bmiC.value.gender == Gender.Male
+                                ? Colors.blueGrey[600]
+                                : card_color,
+                            card_child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: <Widget>[
+                                Icon(
+                                  FontAwesomeIcons.mars,
+                                  size: 120,
+                                  color: Colors.blue,
+                                ),
                                 Text(
-                                  'Ojas Wani',
+                                  'MALE',
                                   style: TextStyle(
-                                    fontSize: 40,
+                                    fontSize: 20,
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                    fontFamily: 'Pacifico',
-                                    letterSpacing: 1,
+                                    color: Colors.blue[100],
                                   ),
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Text(
-                                  'waniojas@gmail.com',
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      letterSpacing: 2,
-                                      fontWeight: FontWeight.w300),
                                 ),
                               ],
                             ),
-                          ],
+                          ),
                         ),
-                        SizedBox(
-                          height: 30,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Ink(
-                              height: 40,
-                              width: 40,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.rectangle,
-                                color: Colors.white54,
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(5),
+                        Expanded(
+                          child: Card_bmi(
+                            onPressed: () {
+                              controller.bmiC.value.gender = Gender.Female;
+                            },
+                            card_color: controller.bmiC.value.gender == Gender.Female
+                                ? Colors.blueGrey[600]
+                                : card_color,
+                            card_child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: <Widget>[
+                                Icon(
+                                  FontAwesomeIcons.venus,
+                                  size: 120,
+                                  color: Colors.pinkAccent,
                                 ),
-                              ),
-                              child: RaisedButton(
-                                  elevation: 20,
-                                  padding: EdgeInsets.symmetric(horizontal: 5),
-                                  color: Colors.white,
-                                  child: Icon(
-                                    FontAwesomeIcons.github,
-                                    color: Colors.black,
-                                    size: 28,
+                                Text(
+                                  'FEMALE',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.pink[300],
                                   ),
-                                  onPressed: () {
-                                    launch('https://github.com/mrflame20');
-                                  }),
-                            ),
-                            Ink(
-                              height: 40,
-                              width: 40,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.rectangle,
-                                color: Colors.white54,
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(5),
                                 ),
-                              ),
-                              child: RaisedButton(
-                                  elevation: 20,
-                                  padding: EdgeInsets.symmetric(horizontal: 5),
-                                  color: Colors.white,
-                                  child: Icon(
-                                    FontAwesomeIcons.linkedinIn,
-                                    color: Colors.blue,
-                                    size: 28,
-                                  ),
-                                  onPressed: () {
-                                    launch('https://www.linkedin.com/in/ojas-wani-83108a153/');
-                                  }),
+                              ],
                             ),
-                          ],
+                          ),
                         ),
                       ],
                     ),
-                    btnOkOnPress: () {},
-                  )..show();
-                },
-              ),
-            ],
-          ),
-        ),
-        body: Column(
-          children: <Widget>[
-            Expanded(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
+                  ),
                   Expanded(
                     child: Card_bmi(
-                      onPressed: () {
-                        setState(() {
-                          gender = Gender.Male;
-                        });
-                      },
-                      card_color: gender == Gender.Male
-                          ? Colors.blueGrey[600]
-                          : card_color,
+                      card_color: card_color,
                       card_child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
-                          Icon(
-                            FontAwesomeIcons.mars,
-                            size: 120,
-                            color: Colors.blue,
-                          ),
                           Text(
-                            'MALE',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.blue[100],
-                            ),
+                            'HEIGHT',
+                            style:
+                                TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                           ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.baseline,
+                            textBaseline: TextBaseline.alphabetic,
+                            children: <Widget>[
+                              Text(
+                                controller.bmiC.value.height.toString(),
+                                style: TextStyle(
+                                    fontSize: 55, fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                'cm',
+                                style: TextStyle(fontSize: 20),
+                              ),
+                              Text(
+                                feetInch(controller.bmiC.value.height),
+                                style: TextStyle(
+                                    fontSize: 55, fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                          Slider(
+                              min: 123,
+                              max: 220,
+                              value: controller.bmiC.value.height.toDouble(),
+                              activeColor:
+                                  controller.bmiC.value.gender == Gender.Male ? Colors.blue : Colors.pink,
+                              inactiveColor: Colors.white,
+                              onChanged: (double value) {
+                                controller.bmiC.value.height = value.round();
+                              }),
                         ],
                       ),
                     ),
                   ),
                   Expanded(
-                    child: Card_bmi(
-                      onPressed: () {
-                        setState(() {
-                          gender = Gender.Female;
-                        });
-                      },
-                      card_color: gender == Gender.Female
-                          ? Colors.blueGrey[600]
-                          : card_color,
-                      card_child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                          Icon(
-                            FontAwesomeIcons.venus,
-                            size: 120,
-                            color: Colors.pinkAccent,
-                          ),
-                          Text(
-                            'FEMALE',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.pink[300],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Expanded(
-              child: Card_bmi(
-                card_color: card_color,
-                card_child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Text(
-                      'HEIGHT',
-                      style:
-                          TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.baseline,
-                      textBaseline: TextBaseline.alphabetic,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: <Widget>[
-                        Text(
-                          height.toString(),
-                          style: TextStyle(
-                              fontSize: 55, fontWeight: FontWeight.bold),
+                        Expanded(
+                          child: Card_bmi(
+                            card_color: card_color,
+                            card_child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: <Widget>[
+                                Text(
+                                  'WEIGHT(kg)',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20,
+                                    color: Colors.yellow,
+                                  ),
+                                ),
+                                Text(
+                                  controller.getWeight.toString(),
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold, fontSize: 60),
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                  children: <Widget>[
+                                    RawMaterialButton(
+                                      child: GestureDetector(
+                                          child: Icon(FontAwesomeIcons.minus),
+                                          onTapDown: (TapDownDetails details) {
+                                            
+                                              timer = Timer.periodic(
+                                                  Duration(milliseconds: 200), (t) {
+                                                controller.decrementWeight();
+                                              });
+                                           
+                                          },
+                                          onTapCancel: () {
+                                            timer.cancel();
+                                          },
+                                          onTapUp: (TapUpDetails details) {
+                                            timer.cancel();
+                                          }),
+                                      onPressed: () {
+                                        controller.decrementWeight();
+                                      },
+                                      shape: CircleBorder(),
+                                      fillColor: Colors.grey[600],
+                                      elevation: 6,
+                                      constraints: BoxConstraints.tightFor(
+                                          height: 50, width: 50),
+                                    ),
+                                    RawMaterialButton(
+                                      child: GestureDetector(
+                                          child: Icon(FontAwesomeIcons.plus),
+                                          onTapDown: (TapDownDetails details) {
+                                           
+                                              timer = Timer.periodic(
+                                                  Duration(milliseconds: 200), (t) {
+                                                controller.incrementWeight();
+                                              });
+                                        
+                                          },
+                                          onTapCancel: () {
+                                            timer.cancel();
+                                          },
+                                          onTapUp: (TapUpDetails details) {
+                                            timer.cancel();
+                                          }),
+                                      onPressed: () {
+                                        controller.decrementWeight();
+                                      },
+                                      shape: CircleBorder(),
+                                      fillColor: Colors.grey[600],
+                                      elevation: 6,
+                                      constraints: BoxConstraints.tightFor(
+                                          height: 50, width: 50),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
-                        Text(
-                          'cm',
-                          style: TextStyle(fontSize: 20),
-                        ),
-                        Text(
-                          feetInch(height),
-                          style: TextStyle(
-                              fontSize: 55, fontWeight: FontWeight.bold),
+                        Expanded(
+                          child: Card_bmi(
+                            card_color: card_color,
+                            card_child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: <Widget>[
+                                Text(
+                                  'AGE',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20,
+                                    color: Colors.yellow,
+                                  ),
+                                ),
+                                Text(
+                                    controller.getAge.toString(),
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold, fontSize: 60),
+                                  ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                  children: <Widget>[
+                                    RawMaterialButton(
+                                      child: GestureDetector(
+                                          child: Icon(FontAwesomeIcons.minus),
+                                          onTapDown: (TapDownDetails details) {
+                                         
+                                              timer = Timer.periodic(
+                                                  Duration(milliseconds: 200), (t) {
+                                                controller.decrementAge();
+                                              });
+                                          
+                                          },
+                                          onTapCancel: () {
+                                            timer.cancel();
+                                          },
+                                          onTapUp: (TapUpDetails details) {
+                                            timer.cancel();
+                                          }),
+                                      onPressed: () {
+                                         controller.decrementAge();
+                                      },
+                                      shape: CircleBorder(),
+                                      fillColor: Colors.grey[600],
+                                      elevation: 6,
+                                      constraints: BoxConstraints.tightFor(
+                                          height: 50, width: 50),
+                                    ),
+                                    RawMaterialButton(
+                                      child: GestureDetector(
+                                          child: Icon(FontAwesomeIcons.plus),
+                                          onTapDown: (TapDownDetails details) {
+                                      
+                                              timer = Timer.periodic(
+                                                  Duration(milliseconds: 200), (t) {
+                                                 controller.bmiC.value.age++;
+                                              });
+                                         
+                                          },
+                                          onTap: () {
+                                             controller.bmiC.value.age++;
+                                          },
+                                          onTapCancel: () {
+                                            timer.cancel();
+                                          },
+                                          onTapUp: (TapUpDetails details) {
+                                            timer.cancel();
+                                          }),
+                                      onPressed: () {
+                                         controller.bmiC.value.age++;
+                                      },
+                                      shape: CircleBorder(),
+                                      fillColor: Colors.grey[600],
+                                      elevation: 6,
+                                      constraints: BoxConstraints.tightFor(
+                                          height: 50, width: 50),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
                       ],
                     ),
-                    Slider(
-                        min: 123,
-                        max: 220,
-                        value: height.toDouble(),
-                        activeColor:
-                            gender == Gender.Male ? Colors.blue : Colors.pink,
-                        inactiveColor: Colors.white,
-                        onChanged: (double value) {
-                          setState(() {
-                            height = value.round();
-                          });
-                        }),
-                  ],
-                ),
-              ),
-            ),
-            Expanded(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-                  Expanded(
-                    child: Card_bmi(
-                      card_color: card_color,
-                      card_child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                          Text(
-                            'WEIGHT(kg)',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                              color: Colors.yellow,
-                            ),
-                          ),
-                          Text(
-                            weight.toString(),
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 60),
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: <Widget>[
-                              RawMaterialButton(
-                                child: GestureDetector(
-                                    child: Icon(FontAwesomeIcons.minus),
-                                    onTapDown: (TapDownDetails details) {
-                                      setState(() {
-                                        timer = Timer.periodic(
-                                            Duration(milliseconds: 200), (t) {
-                                          setState(() {
-                                            weight--;
-                                          });
-                                        });
-                                      });
-                                    },
-                                    onTapCancel: () {
-                                      timer.cancel();
-                                    },
-                                    onTapUp: (TapUpDetails details) {
-                                      timer.cancel();
-                                    }),
-                                onPressed: () {
-                                  weight--;
-                                },
-                                shape: CircleBorder(),
-                                fillColor: Colors.grey[600],
-                                elevation: 6,
-                                constraints: BoxConstraints.tightFor(
-                                    height: 50, width: 50),
-                              ),
-                              RawMaterialButton(
-                                child: GestureDetector(
-                                    child: Icon(FontAwesomeIcons.plus),
-                                    onTapDown: (TapDownDetails details) {
-                                      setState(() {
-                                        timer = Timer.periodic(
-                                            Duration(milliseconds: 200), (t) {
-                                          setState(() {
-                                            weight++;
-                                          });
-                                        });
-                                      });
-                                    },
-                                    onTapCancel: () {
-                                      timer.cancel();
-                                    },
-                                    onTapUp: (TapUpDetails details) {
-                                      timer.cancel();
-                                    }),
-                                onPressed: () {
-                                  setState(() {
-                                    weight++;
-                                  });
-                                },
-                                shape: CircleBorder(),
-                                fillColor: Colors.grey[600],
-                                elevation: 6,
-                                constraints: BoxConstraints.tightFor(
-                                    height: 50, width: 50),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
                   ),
-                  Expanded(
-                    child: Card_bmi(
-                      card_color: card_color,
-                      card_child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                          Text(
-                            'AGE',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                              color: Colors.yellow,
-                            ),
-                          ),
-                          Text(
-                            age.toString(),
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 60),
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: <Widget>[
-                              RawMaterialButton(
-                                child: GestureDetector(
-                                    child: Icon(FontAwesomeIcons.minus),
-                                    onTapDown: (TapDownDetails details) {
-                                      setState(() {
-                                        timer = Timer.periodic(
-                                            Duration(milliseconds: 200), (t) {
-                                          setState(() {
-                                            age--;
-                                          });
-                                        });
-                                      });
-                                    },
-                                    onTapCancel: () {
-                                      timer.cancel();
-                                    },
-                                    onTapUp: (TapUpDetails details) {
-                                      timer.cancel();
-                                    }),
-                                onPressed: () {
-                                  setState(() {
-                                    age--;
-                                  });
-                                },
-                                shape: CircleBorder(),
-                                fillColor: Colors.grey[600],
-                                elevation: 6,
-                                constraints: BoxConstraints.tightFor(
-                                    height: 50, width: 50),
-                              ),
-                              RawMaterialButton(
-                                child: GestureDetector(
-                                    child: Icon(FontAwesomeIcons.plus),
-                                    onTapDown: (TapDownDetails details) {
-                                      setState(() {
-                                        timer = Timer.periodic(
-                                            Duration(milliseconds: 200), (t) {
-                                          setState(() {
-                                            age++;
-                                          });
-                                        });
-                                      });
-                                    },
-                                    onTap: () {
-                                      setState(() {
-                                        age++;
-                                      });
-                                    },
-                                    onTapCancel: () {
-                                      timer.cancel();
-                                    },
-                                    onTapUp: (TapUpDetails details) {
-                                      timer.cancel();
-                                    }),
-                                onPressed: () {
-                                  setState(() {
-                                    age++;
-                                  });
-                                },
-                                shape: CircleBorder(),
-                                fillColor: Colors.grey[600],
-                                elevation: 6,
-                                constraints: BoxConstraints.tightFor(
-                                    height: 50, width: 50),
-                              ),
-                            ],
-                          ),
-                        ],
+                  FlatButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context, MaterialPageRoute(builder: (context) => result()));
+                      controller.bmiC.value.bmi = controller.calculateBmi(controller.bmiC.value.weight, controller.bmiC.value.height);
+                    
+                    },
+                    child: Container(
+                      alignment: Alignment.center,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: controller.bmiC.value.gender == Gender.Male ? Colors.blue : Colors.pink,
+                      ),
+                      child: Text(
+                        'CALCULATE',
+                        style: TextStyle(
+                            fontSize: 35,
+                            letterSpacing: 2,
+                            fontWeight: FontWeight.bold),
                       ),
                     ),
                   ),
                 ],
               ),
             ),
-            FlatButton(
-              onPressed: () {
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => result()));
-                setState(() {
-                  bmi = weight / pow(height / 100, 2);
-                });
-              },
-              child: Container(
-                alignment: Alignment.center,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: gender == Gender.Male ? Colors.blue : Colors.pink,
-                ),
-                child: Text(
-                  'CALCULATE',
-                  style: TextStyle(
-                      fontSize: 35,
-                      letterSpacing: 2,
-                      fontWeight: FontWeight.bold),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+          ),
+        );
+          
+    
+    
   }
 }
 
