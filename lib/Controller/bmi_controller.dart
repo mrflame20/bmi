@@ -6,16 +6,14 @@ import 'package:get/get.dart';
 enum Gender { Male, Female }
 
 class BmiController extends GetxController {
+  final bmiC = Bmi().obs;
 
-  final bmiC = Bmi().obs; 
-
-  double calculateBmi(w,h){
-    
+  double calculateBmi(w, h) {
     return (w / pow(h / 100, 2));
   }
 
- 
   int get getWeight => this.bmiC.value.weight;
+
   int get getAge => this.bmiC.value.age;
 
   void incrementAge() {
@@ -26,7 +24,7 @@ class BmiController extends GetxController {
 
   void incrementWeight() {
     bmiC.update((val) {
-      val.weight =  val.weight + 1;
+      val.weight = val.weight + 1;
     });
   }
 
@@ -41,6 +39,4 @@ class BmiController extends GetxController {
       val.weight = val.weight--;
     });
   }
-
-  
 }

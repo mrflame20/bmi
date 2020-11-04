@@ -5,7 +5,6 @@ import 'package:flutter/painting.dart';
 import 'package:get/get.dart';
 
 class result extends StatelessWidget {
-  
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -95,7 +94,7 @@ String bmiValue() {
 String getResult() {
   if (Get.find<BmiController>().bmiC.value.bmi >= 25) {
     return 'OVERWEIGHT';
-  } else if (Get.find<BmiController>().bmiC.value.bmi> 18.5) {
+  } else if (Get.find<BmiController>().bmiC.value.bmi > 18.5) {
     return 'NORMAL';
   } else {
     return 'UNDERWEIGHT';
